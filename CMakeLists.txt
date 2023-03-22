@@ -2,12 +2,13 @@ cmake_minimum_required(VERSION 3.16)
 set(CMAKE_CXX_STANDARD 20)
 
 # Change this to the name of your plugin #
-project(example_cpp)
+project(malcore_imhex)
 
 # Include ImHex cmake module #
 set(IMHEX_BASE_FOLDER ${CMAKE_CURRENT_SOURCE_DIR}/ImHex)
 set(CMAKE_MODULE_PATH "${IMHEX_BASE_FOLDER}/cmake/modules")
 include("${IMHEX_BASE_FOLDER}/cmake/build_helpers.cmake")
+
 
 # Include ImHex
 add_subdirectory(${IMHEX_BASE_FOLDER})
@@ -15,7 +16,7 @@ addVersionDefines()
 
 # Add your source files here #
 add_library(${PROJECT_NAME} SHARED
-        source/plugin_example.cpp
+        source/plugin_malcore.cpp
 )
 
 # Add additional include directories here #
