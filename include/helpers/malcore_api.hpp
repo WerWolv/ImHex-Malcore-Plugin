@@ -11,6 +11,33 @@ namespace mal::hlp {
 
     class MalcoreApi {
     public:
+        struct PackerInformation {
+            std::string name;
+            u32 confidence;
+        };
+
+        struct Signature {
+            std::string title, description;
+        };
+
+        struct ThreatScore {
+            float score;
+            std::vector<Signature> signatures;
+        };
+
+        struct Api {
+            std::string apiName;
+            u64 pcValue;
+
+            std::vector<std::string> arguments;
+            std::string returnValue;
+        };
+
+        struct DynamicAnalysisResult {
+            std::string hash;
+            std::vector<Api> apis;
+        };
+
         static auto uploadProviderData(hex::prv::Provider *provider, hex::Region region) {
             std::vector<u8> data;
             data.resize(std::min<size_t>(region.getSize(), s_uploadLimit));
@@ -48,6 +75,85 @@ namespace mal::hlp {
                     return std::nullopt;
                 }
             });
+        }
+
+        static std::optional<PackerInformation> getPackerInformation(const nlohmann::json &analysis) {
+            try {
+                auto &packerInformation = analysis["data"]["packer_information"];
+
+                PackerInformation result;
+                result.name = packerInformation["packer_name"].get<std::string>();
+
+                auto confidenceString = packerInformation["confidence"].get<std::string>();
+                result.confidence = std::strtoul(confidenceString.c_str(), nullptr, 10);
+
+                return result;
+            } catch (nlohmann::json::exception &) {
+                return std::nullopt;
+            }
+        }
+
+        static std::optional<std::vector<std::string>> getInterestingStrings(const nlohmann::json &analysis) {
+            try {
+                auto &strings = analysis["data"]["interesting_strings"]["results"];
+
+                std::vector<std::string> result;
+                for (auto &string : strings)
+                    result.push_back(string.get<std::string>());
+
+                return result;
+            } catch (nlohmann::json::exception &) {
+                return std::nullopt;
+            }
+        }
+
+        static std::optional<ThreatScore> getThreatScore(const nlohmann::json &analysis) {
+            try {
+                auto &threatScore = analysis["data"]["threat_score"]["results"];
+
+                ThreatScore result;
+                result.score = std::strtof(threatScore["score"].get<std::string>().c_str(), nullptr);
+
+                for (auto &signature : threatScore["signatures"]) {
+                    const auto &info = signature["info"];
+                    result.signatures.push_back({ info["title"].get<std::string>(), info["description"].get<std::string>() });
+                }
+
+                return result;
+            } catch (nlohmann::json::exception &) {
+                return std::nullopt;
+            }
+        }
+
+        static std::optional<std::vector<DynamicAnalysisResult>> getDynamicAnalysisResult(const nlohmann::json &analysis) {
+            try {
+                auto &dynamicAnalysis = analysis["data"]["dynamic_analysis"]["dynamic_analysis"]["entry_points"];
+
+                std::vector<DynamicAnalysisResult> results;
+
+                for (const auto &entryPoint : dynamicAnalysis) {
+                    DynamicAnalysisResult result;
+
+                    result.hash = entryPoint["apihash"].get<std::string>();
+                    for (const auto &api : entryPoint["apis"]) {
+                        Api apiResult;
+                        apiResult.apiName = api["api_name"].get<std::string>();
+                        apiResult.pcValue = std::strtoull(api["pc"].get<std::string>().c_str(), nullptr, 16);
+
+                        for (const auto &argument : api["args"])
+                            apiResult.arguments.push_back(argument.get<std::string>());
+
+                        if (api["ret_val"].is_string())
+                            apiResult.returnValue = api["ret_val"].get<std::string>();
+
+                        result.apis.emplace_back(std::move(apiResult));
+                    }
+                }
+
+                return results;
+            } catch (nlohmann::json::exception &) {
+                return std::nullopt;
+            }
         }
 
 
