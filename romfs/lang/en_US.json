@@ -1,0 +1,24 @@
+{
+  "code": "en-US",
+  "language": "English",
+  "country": "United States",
+  "fallback": true,
+  "translations": {
+    "mal.view.malcore": "Malcore Analysis",
+    "mal.view.malcore.packer": "Packer Information",
+    "mal.view.malcore.packer.text": "This binary is most likely packed using '{0}'. Certainty: {1:.2f}%",
+    "mal.view.malcore.threat_score": "Detected Threats",
+    "mal.view.malcore.threat_score.text": "Threat Score: {0:.0f}%",
+    "mal.view.malcore.interesting_strings": "Interesting Strings",
+    "mal.view.malcore.dynamic_analysis": "Dynamic Analysis Results",
+    "mal.view.malcore.dynamic_analysis.pc": "PC Value",
+    "mal.view.malcore.dynamic_analysis.function": "Function",
+    "mal.malcore.analyzing": "Analyzing...",
+    "mal.malcore.popup.error.upload_failed": "Failed to upload file to Malcore",
+    "mal.malcore.popup.error.analysis_failed": "Failed to query status of analysis",
+    "mal.malcore.popup.api_key": "Malcore Upload",
+    "mal.malcore.popup.api_key.description": "To use Malcore, you need to enter your API key. You can get one from by subscribing to Malcore.",
+    "mal.malcore.menu.help.upload_to_malcore": "Upload to Malcore",
+    "mal.malcore.popup.upload.description": "Are you sure you want to upload this binary to Malcore?"
+  }
+}
