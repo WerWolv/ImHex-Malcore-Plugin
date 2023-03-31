@@ -1,5 +1,7 @@
 #include <hex/plugin.hpp>
 
+#include <hex/api/theme_manager.hpp>
+
 #include <hex/api/content_registry.hpp>
 #include <hex/helpers/logger.hpp>
 #include <helpers/malcore_api.hpp>
@@ -14,6 +16,8 @@
 using namespace hex;
 
 namespace {
+
+    static ImGui::Texture s_bannerTexture;
 
     class ViewMalcore : public View {
     public:
@@ -155,14 +159,26 @@ namespace {
         }
 
         void drawAlwaysVisible() override {
-            ImGui::SetNextWindowSize(scaled(ImVec2(350, 0)), ImGuiCond_Always);
+            const auto windowWidth = 450_scaled;
+            ImGui::SetNextWindowSize(ImVec2(windowWidth, 0), ImGuiCond_Always);
             if (ImGui::BeginPopupModal("mal.malcore.popup.api_key"_lang, nullptr, ImGuiWindowFlags_AlwaysAutoResize)) {
                 if (!mal::hlp::MalcoreApi::hasApiKey()) {
-                    ImGui::TextWrapped("mal.malcore.popup.api_key.description"_lang);
+                    const auto imageSize = scaled(s_bannerTexture.getSize() * 0.35F);
+
+                    ImGui::SetCursorPosX((windowWidth - imageSize.x) / 2.0F);
+                    ImGui::Image(s_bannerTexture, imageSize);
 
                     ImGui::NewLine();
 
-                    ImGui::PushItemWidth(-1);
+                    ImGui::TextWrapped("mal.malcore.popup.api_key.description"_lang);
+                    ImGui::NewLine();
+                    ImGui::TextWrapped("mal.malcore.popup.api_key.register"_lang);
+                    if (ImGui::Hyperlink("https://malcore.io/register"))
+                        hex::openWebpage("https://malcore.io/register");
+
+                    ImGui::NewLine();
+
+                    ImGui::PushItemWidth(windowWidth - ImGui::GetStyle().FramePadding.x * 4.0F);
                     if (ImGui::InputTextIcon("##api_key", ICON_VS_SYMBOL_KEY, this->m_apiKey, ImGuiInputTextFlags_EnterReturnsTrue)) {
                         setApiKey(this->m_apiKey);
                         this->startAnalysisTask();
@@ -171,7 +187,7 @@ namespace {
                     }
                     ImGui::PopItemWidth();
 
-                    View::confirmButtons("hex.builtin.common.yes"_lang, "hex.builtin.common.no"_lang,
+                    View::confirmButtons("hex.builtin.common.okay"_lang, "hex.builtin.common.cancel"_lang,
                         [this] {
                             setApiKey(this->m_apiKey);
                             this->startAnalysisTask();
@@ -302,6 +318,20 @@ IMHEX_PLUGIN_SETUP("Malcore", "Internet 2.0", "Plugin to integrate with Malcore 
     }, ImHexApi::Provider::isValid);
 
     ContentRegistry::Views::add<ViewMalcore>();
+
+    EventManager::subscribe<RequestChangeTheme>([](const std::string &) {
+        auto loadFromRomfs = [&](const std::string &path) {
+            auto textureData = romfs::get(path);
+
+            return ImGui::Texture(reinterpret_cast<const ImU8*>(textureData.data()), textureData.size());
+        };
+
+        s_bannerTexture = loadFromRomfs(hex::format("assets/malcore_banner{}.png", ThemeManager::getThemeImagePostfix()));
+
+        if (!s_bannerTexture.isValid()) {
+            log::error("Failed to load banner texture!");
+        }
+    });
 }
 
 

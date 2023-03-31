@@ -17,7 +17,8 @@
     "mal.malcore.popup.error.upload_failed": "Failed to upload file to Malcore",
     "mal.malcore.popup.error.analysis_failed": "Failed to query status of analysis",
     "mal.malcore.popup.api_key": "Malcore Upload",
-    "mal.malcore.popup.api_key.description": "To use Malcore, you need to enter your API key. You can get one from by subscribing to Malcore.",
+    "mal.malcore.popup.api_key.description": "To use Malcore, you need to enter your API key. You can get one by subscribing to Malcore.",
+    "mal.malcore.popup.api_key.register": "If you don't have an account yet, you can register at ",
     "mal.malcore.menu.help.upload_to_malcore": "Upload to Malcore",
     "mal.malcore.popup.upload.description": "Are you sure you want to upload this binary to Malcore?"
   }
