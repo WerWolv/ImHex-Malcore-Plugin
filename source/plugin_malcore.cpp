@@ -3,6 +3,7 @@
 #include <hex/api/theme_manager.hpp>
 
 #include <hex/api/content_registry.hpp>
+#include <hex/api/task.hpp>
 #include <hex/helpers/logger.hpp>
 #include <helpers/malcore_api.hpp>
 
@@ -238,7 +239,7 @@ namespace {
                 auto uuid = mal::hlp::MalcoreApi::uploadProviderData(provider, { provider->getBaseAddress(), provider->getBaseAddress() + provider->getActualSize() }).get();
 
                 if (!uuid.has_value()) {
-                    View::showErrorPopup("mal.malcore.popup.error.upload_failed"_lang);
+
                     return;
                 }
 
@@ -247,7 +248,7 @@ namespace {
                     status = mal::hlp::MalcoreApi::getAnalysisStatus(*uuid).get();
 
                     if (!status.has_value()) {
-                        View::showErrorPopup("mal.malcore.popup.error.analysis_failed"_lang);
+
                         return;
                     }
 
@@ -268,7 +269,7 @@ namespace {
                     this->m_analysisValid = true;
                     this->getWindowOpenState() = true;
                 } else {
-                    View::showErrorPopup("mal.malcore.popup.error.analysis_failed"_lang);
+
                 }
 
                 /*TaskManager::doLater([this]{
