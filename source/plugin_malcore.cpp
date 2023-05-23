@@ -175,8 +175,9 @@ namespace {
                     ImGui::TextFormattedWrapped("{}", "mal.malcore.popup.api_key.description"_lang);
                     ImGui::NewLine();
                     ImGui::TextFormattedWrapped("{}", "mal.malcore.popup.api_key.register"_lang);
-                    if (ImGui::Hyperlink("https://malcore.io/register"))
-                        hex::openWebpage("https://malcore.io/register");
+
+                    if (ImGui::Hyperlink("https://link.malcore.io/imhex/register"))
+                        hex::openWebpage("https://link.malcore.io/imhex/register");
 
                     ImGui::NewLine();
 
