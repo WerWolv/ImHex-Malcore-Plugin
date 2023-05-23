@@ -172,9 +172,9 @@ namespace {
 
                     ImGui::NewLine();
 
-                    ImGui::TextWrapped("mal.malcore.popup.api_key.description"_lang);
+                    ImGui::TextFormattedWrapped("{}", "mal.malcore.popup.api_key.description"_lang);
                     ImGui::NewLine();
-                    ImGui::TextWrapped("mal.malcore.popup.api_key.register"_lang);
+                    ImGui::TextFormattedWrapped("{}", "mal.malcore.popup.api_key.register"_lang);
                     if (ImGui::Hyperlink("https://malcore.io/register"))
                         hex::openWebpage("https://malcore.io/register");
 
@@ -200,7 +200,7 @@ namespace {
                         }
                     );
                 } else {
-                    ImGui::TextWrapped("mal.malcore.popup.upload.description"_lang);
+                    ImGui::TextFormattedWrapped("{}", "mal.malcore.popup.upload.description"_lang);
 
                     ImGui::NewLine();
 
