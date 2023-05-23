@@ -6,6 +6,7 @@
 #include <hex/api/task.hpp>
 #include <hex/helpers/logger.hpp>
 #include <helpers/malcore_api.hpp>
+#include <popups/popup_notification.hpp>
 
 #include <hex/ui/view.hpp>
 
@@ -239,7 +240,7 @@ namespace {
                 auto uuid = mal::hlp::MalcoreApi::uploadProviderData(provider, { provider->getBaseAddress(), provider->getBaseAddress() + provider->getActualSize() }).get();
 
                 if (!uuid.has_value()) {
-
+                    mal::PopupError::open("mal.malcore.popup.error.upload_failed"_lang);
                     return;
                 }
 
@@ -248,7 +249,7 @@ namespace {
                     status = mal::hlp::MalcoreApi::getAnalysisStatus(*uuid).get();
 
                     if (!status.has_value()) {
-
+                        mal::PopupError::open("mal.malcore.popup.error.analysis_failed"_lang);
                         return;
                     }
 
@@ -269,19 +270,8 @@ namespace {
                     this->m_analysisValid = true;
                     this->getWindowOpenState() = true;
                 } else {
-
+                    mal::PopupError::open("mal.malcore.popup.error.analysis_failed"_lang);
                 }
-
-                /*TaskManager::doLater([this]{
-                    if (this->m_dynamicAnalysisResults.has_value()) {
-                        for (const auto &result : this->m_dynamicAnalysisResults.value()) {
-                            for (const auto &api : result.apis) {
-                                this->m_highlightedAddresses.push_back(ImHexApi::HexEditor::addBackgroundHighlight({ api.pcValue, 8 }, 0x80FF0000));
-                                this->m_tooltips.push_back(ImHexApi::HexEditor::addTooltip({ api.pcValue, 8 }, api.apiName, 0x80FF0000));
-                            }
-                        }
-                    }
-                });*/
             });
         }
 
@@ -314,7 +304,7 @@ IMHEX_PLUGIN_SETUP("Malcore", "Internet 2.0", "Plugin to integrate with Malcore 
 
     mal::hlp::MalcoreApi::setApiKey(apiKey);
 
-    ContentRegistry::Interface::addMenuItem({ "hex.builtin.menu.help", "mal.malcore.menu.help.upload_to_malcore" }, 10000, Shortcut::None, [] {
+    ContentRegistry::Interface::addMenuItem({ "hex.builtin.menu.extras", "mal.malcore.menu.help.upload_to_malcore" }, 10000, Shortcut::None, [] {
         EventManager::post<RequestOpenPopup>("mal.malcore.popup.api_key"_lang);
     }, ImHexApi::Provider::isValid);
 
