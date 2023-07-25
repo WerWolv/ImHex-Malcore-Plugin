@@ -29,6 +29,7 @@ target_link_libraries(${PROJECT_NAME} PRIVATE)
 # ---- No need to change anything from here downwards unless you know what you're doing ---- #
 
 target_link_libraries(${PROJECT_NAME} PRIVATE libimhex)
+target_compile_definitions(${PROJECT_NAME} PRIVATE IMHEX_VERSION="${IMHEX_VERSION}")
 
 set_target_properties(main PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
 set_target_properties(libimhex PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
@@ -47,7 +48,7 @@ endif()
 
 add_compile_definitions(IMHEX_PROJECT_NAME=\"${PROJECT_NAME}\")
 set_target_properties(${PROJECT_NAME} PROPERTIES POSITION_INDEPENDENT_CODE ON)
-setupCompilerWarnings(${PROJECT_NAME})
+setupCompilerFlags(${PROJECT_NAME})
 
 set(LIBROMFS_RESOURCE_LOCATION ${CMAKE_CURRENT_SOURCE_DIR}/romfs)
 set(LIBROMFS_PROJECT_NAME ${PROJECT_NAME})
