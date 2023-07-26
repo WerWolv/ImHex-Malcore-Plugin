@@ -1,3 +1,4 @@
+#include <helpers/malcore_api.hpp>
 #include <hex/plugin.hpp>
 
 #include <hex/api/theme_manager.hpp>
@@ -5,7 +6,6 @@
 #include <hex/api/content_registry.hpp>
 #include <hex/api/task.hpp>
 #include <hex/helpers/logger.hpp>
-#include <helpers/malcore_api.hpp>
 #include <popups/popup_notification.hpp>
 
 #include <hex/ui/view.hpp>
@@ -318,7 +318,7 @@ IMHEX_PLUGIN_SETUP("Malcore", "Internet 2.0", "Plugin to integrate with Malcore 
             return ImGui::Texture(reinterpret_cast<const ImU8*>(textureData.data()), textureData.size());
         };
 
-        s_bannerTexture = loadFromRomfs(hex::format("assets/malcore_banner{}.png", ThemeManager::getThemeImagePostfix()));
+        s_bannerTexture = loadFromRomfs(hex::format("assets/malcore_banner_{}.png", ThemeManager::getImageTheme()));
 
         if (!s_bannerTexture.isValid()) {
             log::error("Failed to load banner texture!");

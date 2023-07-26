@@ -1,7 +1,7 @@
 #pragma once
 
-#include <hex/providers/provider.hpp>
 #include <hex/helpers/http_requests.hpp>
+#include <hex/providers/provider.hpp>
 
 #include <wolv/literals.hpp>
 

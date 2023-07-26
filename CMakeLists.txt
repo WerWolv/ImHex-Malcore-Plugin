@@ -29,6 +29,7 @@ target_link_libraries(${PROJECT_NAME} PRIVATE)
 # ---- No need to change anything from here downwards unless you know what you're doing ---- #
 
 target_link_libraries(${PROJECT_NAME} PRIVATE libimhex)
+target_compile_definitions(${PROJECT_NAME} PRIVATE IMHEX_VERSION="${IMHEX_VERSION}")
 
 set_target_properties(main PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
 set_target_properties(libimhex PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
